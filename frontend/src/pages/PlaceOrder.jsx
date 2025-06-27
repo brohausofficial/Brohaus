@@ -6,6 +6,21 @@ import { ShopContext } from '../context/ShopContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
+// Function to decode JWT token
+const decodeToken = (token) => {
+    try {
+        const base64Url = token.split('.')[1]
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        }).join(''))
+        return JSON.parse(jsonPayload)
+    } catch (error) {
+        console.error('Invalid token', error)
+        return null
+    }
+}
+
 const PlaceOrder = () => {
 
     const [method, setMethod] = useState('cod');
@@ -21,6 +36,7 @@ const PlaceOrder = () => {
         country: '',
         phone: ''
     })
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         const emailFromSession = sessionStorage.getItem('email');
@@ -69,10 +85,13 @@ const PlaceOrder = () => {
 
     const onSubmitHandler = async (event) => {
         event.preventDefault()
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         try {
             // Validate phone number length
             if (formData.phone.length !== 10) {
                 toast.error('Phone number must be exactly 10 digits.')
+                setIsSubmitting(false);
                 return
             }
 
@@ -94,49 +113,79 @@ const PlaceOrder = () => {
             // Prevent order placement if cart is empty or total amount is zero
             if (orderItems.length === 0 || (getCartAmount() + delivery_fee) === 0) {
                 toast.error('Your cart is empty. Please add items before placing an order.')
+                setIsSubmitting(false);
+                return
+            }
+
+            // Decode token to get userId
+            const decodedToken = decodeToken(token)
+            const userId = decodedToken ? decodedToken.id || decodedToken._id : null
+
+            if (!userId) {
+                toast.error('User not authenticated. Please login again.')
+                setIsSubmitting(false);
                 return
             }
 
             let orderData = {
+                userId,
                 address: formData,
                 items: orderItems,
                 amount: getCartAmount() + delivery_fee
             }
+            
             
 
             switch (method) {
 
                 // API Calls for COD
                 case 'cod':
-                    const response = await axios.post(backendUrl + '/api/order/place',orderData,{headers:{token}})
-                    if (response.data.success) {
-                        setCartItems({})
-                        navigate('/orders')
-                    } else {
-                        toast.error(response.data.message)
+                    try {
+                        const response = await axios.post(backendUrl + '/api/order/place',orderData,{headers:{token}})
+                        if (response.data.success) {
+                            setCartItems({})
+                            navigate('/orders')
+                        } else {
+                            toast.error(response.data.message)
+                        }
+                    } catch (error) {
+                        toast.error(error.message)
+                    } finally {
+                        setIsSubmitting(false);
                     }
                     break;
 
                 case 'stripe':
-                    const responseStripe = await axios.post(backendUrl + '/api/order/stripe',orderData,{headers:{token}})
-                    if (responseStripe.data.success) {
-                        const {session_url} = responseStripe.data
-                        window.location.replace(session_url)
-                    } else {
-                        toast.error(responseStripe.data.message)
+                    try {
+                        const responseStripe = await axios.post(backendUrl + '/api/order/stripe',orderData,{headers:{token}})
+                        if (responseStripe.data.success) {
+                            const {session_url} = responseStripe.data
+                            window.location.replace(session_url)
+                        } else {
+                            toast.error(responseStripe.data.message)
+                        }
+                    } catch (error) {
+                        toast.error(error.message)
+                    } finally {
+                        setIsSubmitting(false);
                     }
                     break;
 
                 case 'razorpay':
-
-                    const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay', orderData, {headers:{token}})
-                    if (responseRazorpay.data.success) {
-                        initPay(responseRazorpay.data.order)
+                    try {
+                        const responseRazorpay = await axios.post(backendUrl + '/api/order/razorpay', orderData, {headers:{token}})
+                        if (responseRazorpay.data.success) {
+                            initPay(responseRazorpay.data.order)
+                        }
+                    } catch (error) {
+                        toast.error(error.message)
+                    } finally {
+                        setIsSubmitting(false);
                     }
-
                     break;
 
                 default:
+                    setIsSubmitting(false);
                     break;
             }
 
@@ -144,6 +193,7 @@ const PlaceOrder = () => {
         } catch (error) {
             console.log(error)
             toast.error(error.message)
+            setIsSubmitting(false);
         }
     }
 
@@ -202,13 +252,13 @@ const PlaceOrder = () => {
                         {(() => {
                             const totalAmount = getCartAmount() + delivery_fee;
                             return (
-                                <button
-                                    type='submit'
-                                    className={`bg-black text-white px-16 py-3 text-sm ${totalAmount === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                    disabled={totalAmount === 0}
-                                >
-                                    PLACE ORDER
-                                </button>
+                        <button
+                            type='submit'
+                            className={`bg-black text-white px-16 py-3 text-sm ${(totalAmount === 0 || isSubmitting) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={totalAmount === 0 || isSubmitting}
+                        >
+                            {isSubmitting ? 'PLACING ORDER...' : 'PLACE ORDER'}
+                        </button>
                             );
                         })()}
                     </div>
