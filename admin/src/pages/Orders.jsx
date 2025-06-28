@@ -21,8 +21,6 @@ const Orders = ({ token }) => {
     }
 
     try {
-      // Log token to verify admin token usage
-      
 
       const response = await axios.post(backendUrl + '/api/order/list', {}, { headers: { Authorization: `Bearer ${token}` } })
       if (response.data.success) {
@@ -50,9 +48,9 @@ const Orders = ({ token }) => {
     }
   }
 
-  //excel
+    //excel
   const downloadExcel = () => {
-    const filtered = (statusFilter === 'All'
+    const filtered = statusFilter === 'All'
       ? orders
       : (statusFilter === 'Payment Done'
         ? orders.filter(order => order.payment === true)
@@ -61,7 +59,6 @@ const Orders = ({ token }) => {
           : orders.filter(order => order.status === statusFilter)
         )
       )
-    ).filter(order => !(order.paymentMethod === 'Razorpay' && order.payment === false))
 
     const data = filtered.map(order => ({
       Name: order.address.firstName + ' ' + order.address.lastName,
@@ -69,22 +66,12 @@ const Orders = ({ token }) => {
       Address: `${order.address.street}, ${order.address.city}, ${order.address.state}, ${order.address.country} - ${order.address.zipcode}`,
       Phone: order.address.phone,
       Amount: `${currency}${order.amount}`,
-      Method: order.paymentMethod,
       Payment: order.payment ? 'Done' : 'Pending',
       Status: order.status,
-      Date: new Date(order.date).toLocaleDateString(),
-      _id: order._id,
-      userId: order.userId,
-      email: order.email,
-      city: order.address.city,
-      state: order.address.state,
-      country: order.address.country,
-      zipcode: order.address.zipcode,
-      phone: order.address.phone,
-      itemsCount: order.items.length
+      Date: new Date(order.date).toLocaleDateString()
     }))
 
-    const worksheet = XLSX.utils.json_to_sheet(data, {header: ["Name", "Items", "Address", "Phone", "Amount", "Method", "Payment", "Status", "Date", "_id", "userId", "email", "city", "state", "country", "zipcode", "phone", "itemsCount"]})
+    const worksheet = XLSX.utils.json_to_sheet(data)
     const workbook = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders')
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
@@ -94,7 +81,7 @@ const Orders = ({ token }) => {
 
 
   // Filter + Pagination
-  const filteredOrders = (statusFilter === 'All'
+  const filteredOrders = statusFilter === 'All'
     ? orders
     : (statusFilter === 'Payment Done'
       ? orders.filter(order => order.payment === true)
@@ -103,7 +90,6 @@ const Orders = ({ token }) => {
         : orders.filter(order => order.status === statusFilter)
       )
     )
-  ).filter(order => !(order.paymentMethod === 'Razorpay' && order.payment === false))
 
   const totalPages = Math.ceil(filteredOrders.length / entriesPerPage)
   const currentOrders = filteredOrders.slice(

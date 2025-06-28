@@ -16,7 +16,6 @@ const Orders = () => {
       }
 
       const response = await axios.post(backendUrl + '/api/order/userorders',{},{headers:{token}})
-      console.log('Order API response:', response.data);
       if (response.data.success) {
         let allOrdersItem = []
         response.data.orders.map((order)=>{
@@ -29,12 +28,10 @@ const Orders = () => {
           })
         })
         setorderData(allOrdersItem.reverse())
-      } else {
-        console.error('Order API returned success false:', response.data);
       }
       
     } catch (error) {
-      console.error('Error loading orders:', error);
+      
     }
   }
 

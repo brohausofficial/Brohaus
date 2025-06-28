@@ -55,33 +55,39 @@ const PlaceOrder = () => {
         setFormData(data => ({ ...data, [name]: value }))
     }
 
-const initPay = (order) => {
-        const options = {
-            key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-            amount: order.amount * 100,
-            currency: order.currency,
-            name:'Order Payment',
-            description:'Order Payment',
-            order_id: order.id,
-            receipt: order.receipt,
-            handler: async (response) => {
-                console.log(response)
-                try {
-                    
-                    const { data } = await axios.post(backendUrl + '/api/order/verifyRazorpay',response,{headers:{token}})
-                    if (data.success) {
-                        navigate('/orders')
-                        setCartItems({})
-                    }
-                } catch (error) {
-                    console.log(error)
-                    toast.error(error)
-                }
+   const initPay = (order) => {
+    const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency,
+        name: 'Order Payment',
+        description: 'Order Payment',
+        order_id: order.id,
+        receipt: order.receipt, // This is your local MongoDB order _id
+        handler: async (response) => {
+            try {
+                // Send Razorpay payment details + local order ID to backend
+                await axios.post(backendUrl + '/api/order/verifyRazorpay', {
+                    ...response,
+                    localOrderId: order.receipt, // Important for DB update
+                    userId: decodeToken(token)?.id || decodeToken(token)?._id
+                }, {
+                    headers: { token }
+                })
+
+                navigate('/orders')
+                setCartItems({})
+            } catch (error) {
+                console.error(error)
+                toast.error("Payment verification failed")
             }
         }
-        const rzp = new window.Razorpay(options)
-        rzp.open()
     }
+
+    const rzp = new window.Razorpay(options)
+    rzp.open()
+}
+
 
     const onSubmitHandler = async (event) => {
         event.preventDefault()

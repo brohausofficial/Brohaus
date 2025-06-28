@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react'
 import {assets} from '../assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
@@ -8,7 +8,6 @@ const Navbar = () => {
 
     const [visible,setVisible] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
 
     const {setShowSearch , getCartCount , navigate, token, setToken, setCartItems} = useContext(ShopContext);
 
@@ -22,25 +21,6 @@ const Navbar = () => {
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
     }
-
-    useEffect(() => {
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setIsDropdownOpen(false);
-    }
-  };
-
-  if (isDropdownOpen) {
-    document.addEventListener('mousedown', handleClickOutside);
-  } else {
-    document.removeEventListener('mousedown', handleClickOutside);
-  }
-
-  return () => {
-    document.removeEventListener('mousedown', handleClickOutside);
-  };
-}, [isDropdownOpen]);
-
 
   return (
     <div className='flex items-center justify-between py-5 font-medium'>
@@ -74,20 +54,14 @@ const Navbar = () => {
             <div className='relative'>
                 <img onClick={()=> token ? toggleDropdown() : navigate('/login') } className='w-5 cursor-pointer' src={assets.profile_icon} alt="" />
                 {/* Dropdown Menu */}
-              {token && isDropdownOpen && 
-  <div 
-    className='absolute dropdown-menu right-0 pt-4'
-    ref={dropdownRef} // 👈 Add ref here
-    onMouseLeave={() => setIsDropdownOpen(false)}
-  >
-    <div className='flex flex-col gap-2 py-3 px-5 bg-slate-100 text-gray-500 rounded max-w-max'>
-      <p className='cursor-pointer hover:text-black'>{sessionStorage.getItem('email')}</p>
-      <p onClick={() => navigate('/orders')} className='cursor-pointer hover:text-black'>Orders</p>
-      <p onClick={logout} className='cursor-pointer hover:text-black'>Logout</p>
-    </div>
-  </div>
-}
-
+                {token && isDropdownOpen && 
+                <div className='absolute dropdown-menu right-0 pt-4'>
+                    <div className='flex flex-col gap-2 py-3 px-5 bg-slate-100 text-gray-500 rounded max-w-max'>
+                        <p className='cursor-pointer hover:text-black'>{sessionStorage.getItem('email')}</p>
+                        <p onClick={()=>navigate('/orders')} className='cursor-pointer hover:text-black'>Orders</p>
+                        <p onClick={logout} className='cursor-pointer hover:text-black'>Logout</p>
+                    </div>
+                </div>}
             </div> 
             <Link to='/cart' className='relative'>
                 <img src={assets.cart_icon} className='w-5 min-w-5' alt="" />
