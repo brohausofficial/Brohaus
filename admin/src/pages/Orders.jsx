@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { backendUrl, currency } from '../App'
 import { toast } from 'react-toastify'
 import { assets } from '../assets/assets'
 import * as XLSX from 'xlsx'
 import { saveAs } from 'file-saver'
 import xlsIcon from "../assets/xls.png";
+import {privateAxios} from "../../service/axios.service.js";
 
-const Orders = ({ token }) => {
+const Orders = () => {
 
   const [orders, setOrders] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
@@ -16,13 +16,9 @@ const Orders = ({ token }) => {
 
   const fetchAllOrders = async () => {
 
-    if (!token) {
-      return null;
-    }
-
     try {
 
-      const response = await axios.post(backendUrl + '/api/order/list', {}, { headers: { Authorization: `Bearer ${token}` } })
+      const response = await privateAxios.post(backendUrl + '/api/order/list', {})
       if (response.data.success) {
         setOrders(response.data.orders.reverse())
       } else {
@@ -38,13 +34,13 @@ const Orders = ({ token }) => {
 
   const statusHandler = async ( event, orderId ) => {
     try {
-      const response = await axios.post(backendUrl + '/api/order/status' , {orderId, status:event.target.value}, { headers: { Authorization: `Bearer ${token}` } })
+      const response = await privateAxios.post(backendUrl + '/api/order/status' , {orderId, status:event.target.value})
       if (response.data.success) {
         await fetchAllOrders()
       }
     } catch (error) {
       console.log(error)
-      toast.error(response.data.message)
+      toast.error("An unexpected error has been occurred")
     }
   }
 
@@ -103,7 +99,7 @@ const Orders = ({ token }) => {
       fetchAllOrders()
     }, 3000)
     return () => clearInterval(intervalId)
-  }, [token])
+  }, [])
 
   return (
    <div className='p-4'>

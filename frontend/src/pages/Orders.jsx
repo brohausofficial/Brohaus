@@ -1,21 +1,18 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from '../components/Title';
-import axios from 'axios';
+import {privateAxios} from "../../service/axios.service.js";
 
 const Orders = () => {
 
-  const { backendUrl, token , currency} = useContext(ShopContext);
+  const {currency} = useContext(ShopContext);
 
   const [orderData,setorderData] = useState([])
 
   const loadOrderData = async () => {
     try {
-      if (!token) {
-        return null
-      }
 
-      const response = await axios.post(backendUrl + '/api/order/userorders',{},{headers:{token}})
+      const response = await privateAxios.post('/api/order/userorders',{})
       if (response.data.success) {
         let allOrdersItem = []
         response.data.orders.map((order)=>{
@@ -31,13 +28,13 @@ const Orders = () => {
       }
       
     } catch (error) {
-      
+      console.log(error)
     }
   }
 
   useEffect(()=>{
     loadOrderData()
-  },[token])
+  },[])
 
   return (
     <div className='border-t pt-16'>
