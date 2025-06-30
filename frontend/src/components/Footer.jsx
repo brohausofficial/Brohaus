@@ -10,7 +10,7 @@ const Footer = () => {
         <div>
             <img src={assets.logo} className='mb-5 w-24 h-20' alt="" />
             <p className='w-full md:w-2/3 text-gray-600'>
-            Brohouse isn't just a brand — it's a lifestyle. Designed for those who live boldly and dress sharper, our latest collection brings street-ready comfort with effortless style. Step into the brocode of fashion.
+            Brohaus isn't just a brand — it's a lifestyle. Designed for those who live boldly and dress sharper, our latest collection brings street-ready comfort with effortless style. Step into the brocode of fashion.
             </p>
         </div>
 

@@ -11,9 +11,9 @@ const PrivacyPolicy = () => {
 
       <div className='my-10 flex flex-col justify-center items-center md:flex-row gap-10 mb-28'>
         <div className='flex flex-col justify-center items-center gap-6 px-4 md:px-0 text-gray-600 text-center'>
-          <h1 className='font-bold text-2xl mb-4'>Privacy Policy – Brohouse</h1>
+          <h1 className='font-bold text-2xl mb-4'>Privacy Policy – Brohaus</h1>
           <p className='mb-4'>
-            Your privacy matters. At Brohouse, we are committed to protecting your personal information.
+            Your privacy matters. At Brohaus, we are committed to protecting your personal information.
           </p>
 
           <h2 className='font-semibold text-xl mt-4 mb-2'>What We Collect</h2>

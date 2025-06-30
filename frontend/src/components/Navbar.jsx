@@ -2,6 +2,7 @@ import React, { useContext, useState, useRef, useEffect } from 'react';
 import {assets} from '../assets/assets'
 import { Link, NavLink } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
+import {handleLogout} from "../../helper/logoutHelper.js";
 
 
 const Navbar = () => {
@@ -10,7 +11,7 @@ const Navbar = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
-    const {setShowSearch , getCartCount , navigate, token, setToken, setCartItems} = useContext(ShopContext);
+    const {setShowSearch , getCartCount , navigate, setCartItems} = useContext(ShopContext);
 
     useEffect(() => {
     const handleClickOutside = (event) => {
@@ -26,9 +27,7 @@ const Navbar = () => {
 }, []);
 
     const logout = () => {
-        navigate('/login')
-        localStorage.removeItem('token')
-        setToken('')
+        handleLogout()
         setCartItems({})
     }
 
@@ -66,9 +65,9 @@ const Navbar = () => {
             <img onClick={()=> { setShowSearch(true); navigate('/collection') }} src={assets.search_icon} className='w-5 cursor-pointer' alt="" />
             
             <div className='relative'>
-                <img onClick={()=> token ? toggleDropdown() : navigate('/login') } className='w-5 cursor-pointer' src={assets.profile_icon} alt="" />
+                <img onClick={()=> localStorage.getItem('token') ? toggleDropdown() : navigate('/login') } className='w-5 cursor-pointer' src={assets.profile_icon} alt="" />
                 {/* Dropdown Menu */}
-               {token && isDropdownOpen && 
+               {localStorage.getItem('token') && isDropdownOpen &&
     <div ref={dropdownRef} className='absolute dropdown-menu right-0 pt-4' onMouseLeave={() => setIsDropdownOpen(false)}>
         <div className='flex flex-col gap-2 py-3 px-5 bg-slate-100 text-gray-500 rounded max-w-max'>
             <p className='cursor-pointer hover:text-black'>{sessionStorage.getItem('email')}</p>

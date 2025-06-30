@@ -13,8 +13,8 @@ const ReturnPolicy = () => {
         <div className='flex flex-col justify-center items-center gap-6 px-4 md:px-0'>
           <p className='font-semibold text-xl text-gray-600'>Return Policy</p>
           <p className='text-gray-500'>
-            📦 Return Policy – Brohouse
-            At Brohouse, we stand by the quality of our products. If you're not completely satisfied with your purchase, we’re here to help.
+            📦 Return Policy – Brohaus
+            At Brohaus, we stand by the quality of our products. If you're not completely satisfied with your purchase, we’re here to help.
           </p>
           <p className='text-gray-500'>
             ✅ Returns

@@ -3,6 +3,7 @@ import {assets} from '../assets/assets'
 import axios from 'axios'
 import { backendUrl } from '../App'
 import { toast } from 'react-toastify'
+ import {privateAxios} from "../../service/axios.service.js";
 
 const Add = ({token}) => {
 
@@ -39,7 +40,7 @@ const Add = ({token}) => {
       image3 && formData.append("image3",image3)
       image4 && formData.append("image4",image4)
 
-      const response = await axios.post(backendUrl + "/api/product/add",formData,{headers:{Authorization: `Bearer ${token}`}})
+      const response = await privateAxios.post(backendUrl + "/api/product/add",formData)
 
       if (response.data.success) {
         toast.success(response.data.message)

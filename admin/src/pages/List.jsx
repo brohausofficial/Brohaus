@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState, useRef } from 'react'
 import { backendUrl, currency } from '../App'
 import { toast } from 'react-toastify'
+import {privateAxios} from "../../service/axios.service.js";
 
 const List = ({ token }) => {
 
@@ -12,7 +13,7 @@ const List = ({ token }) => {
   const fetchList = async () => {
     try {
 
-      const response = await axios.get(backendUrl + '/api/product/list', { headers: { Authorization: `Bearer ${token}` } })
+      const response = await privateAxios.get(backendUrl + '/api/product/list')
       if (response.data.success) {
         setList(response.data.products.reverse());
         if (errorToastId.current) {
@@ -44,7 +45,7 @@ const List = ({ token }) => {
   const removeProduct = async (id) => {
     try {
 
-      const response = await axios.post(backendUrl + '/api/product/remove', { id }, { headers: { Authorization: `Bearer ${token}` } })
+      const response = await privateAxios.post(backendUrl + '/api/product/remove', { id })
 
       if (response.data.success) {
         toast.success(response.data.message)
