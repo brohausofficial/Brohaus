@@ -333,7 +333,7 @@ const Login = () => {
                                         inputMode="numeric"
                                         autoComplete="one-time-code"
                                         required
-                                        className="w-12 h-12 text-center border rounded-md shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                                        className="w-12 h-12 text-center border rounded-md shadow-sm focus:border-gray-800 focus:ring-gray-900"
                                         value={otp[index]}
                                         onChange={(e) => handleOTPChange(e, index)}
                                         onKeyDown={(e) => handleOTPKeyDown(e, index)}
