@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect } from "react"
 import { toast } from "react-toastify"
-import { Loader2, Phone, Shield, RotateCcw, AlertCircle, CheckCircle } from "lucide-react"
+import { Loader2, Phone, Shield, RotateCcw } from "lucide-react"
 import {publicAxios} from "../../service/axios.service.js";
 import {useNavigate} from "react-router-dom";
 import {backendUrl} from "../App.jsx";
 
 const Login = () => {
     const [phone, setPhone] = useState("")
-    const [otp, setOTP] = useState("")
+    // Change otp state to array of 4 strings
+    const [otp, setOTP] = useState(["", "", "", ""])
     const [email, setEmail] = useState("")
     const [otpSent, setOtpSent] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -19,6 +20,10 @@ const Login = () => {
     const timerRef = useRef(null)
     const errorToastId = useRef(null)
     const navigate = useNavigate();
+
+    // Create refs for the 4 OTP inputs
+    const otpRefs = useRef([])
+
     // Validation functions
     const validatePhone = (phoneNumber) => {
         const phoneRegex = /^\d{10}$/
@@ -30,6 +35,7 @@ const Login = () => {
         return emailRegex.test(email.trim())
     }
 
+    // Adjust validateOTP to check joined string
     const validateOTP = (otpValue) => {
         return /^\d{4}$/.test(otpValue)
     }
@@ -62,7 +68,6 @@ const Login = () => {
 
     // Send OTP API call
     const sendOTPAPI = async (phoneNumber) => {
-        console.log("Printing phone number", phoneNumber)
         const response = await publicAxios.post(`${backendUrl}/api/user/sendOTP`, {
             phone: phoneNumber,
         })
@@ -162,7 +167,10 @@ const Login = () => {
     const verifyOTP = async () => {
         clearMessages()
 
-        if (!validateOTP(otp)) {
+        // Join otp array to string
+        const otpString = otp.join("")
+
+        if (!validateOTP(otpString)) {
             setError("Please enter a valid 4-digit OTP")
             return
         }
@@ -176,10 +184,9 @@ const Login = () => {
 
         try {
             setLoading(true)
-            const response = await verifyOTPAPI(phone, otp, email)
+            const response = await verifyOTPAPI(phone, otpString)
             if (response.success) {
                 setSuccess("Login successful!")
-                console.log("Printing response", response.token)
                 localStorage.setItem("token", response.token)
                 sessionStorage.setItem('email', response.email)
                 sessionStorage.setItem('mobileNumber', phone)
@@ -214,11 +221,29 @@ const Login = () => {
         }
     }
 
-    // Handle OTP input change with validation
-    const handleOTPChange = (e) => {
-        const value = e.target.value.replace(/\D/g, "").slice(0, 4)
-        setOTP(value)
+    // Handle OTP input change for each input
+    const handleOTPChange = (e, index) => {
+        const value = e.target.value.replace(/\D/g, "").slice(0, 1)
+        if (!value && otp[index] === "") {
+            // No change
+            return
+        }
+        const newOTP = [...otp]
+        newOTP[index] = value
+        setOTP(newOTP)
         clearMessages()
+
+        if (value && index < 3) {
+            // Move focus to next input
+            otpRefs.current[index + 1].focus()
+        }
+    }
+
+    // Handle key down for backspace to move focus back
+    const handleOTPKeyDown = (e, index) => {
+        if (e.key === "Backspace" && otp[index] === "" && index > 0) {
+            otpRefs.current[index - 1].focus()
+        }
     }
 
     // Handle phone input change
@@ -235,7 +260,7 @@ const Login = () => {
     // Reset form
     const resetForm = () => {
         setPhone("")
-        setOTP("")
+        setOTP(["", "", "", ""])
         setEmail("")
         setOtpSent(false)
         setIsVerified(false)
@@ -273,8 +298,6 @@ const Login = () => {
                     </p>
                 </div>
 
-               
-
                 <form onSubmit={onSubmitHandler} className="space-y-6">
                     {/* Phone Number Input */}
                     <div>
@@ -300,17 +323,25 @@ const Login = () => {
                             <label htmlFor="otp" className="block text-sm font-medium text-gray-800 mb-2">
                                 4-Digit OTP
                             </label>
-                            <input
-                                id="otp"
-                                type="text"
-                                value={otp}
-                                onChange={handleOTPChange}
-                                placeholder="Enter 4-digit OTP"
-                                maxLength={4}
-                                className="w-full px-4 py-3 text-center text-xl font-mono tracking-[0.5em] border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-900 outline-none transition-all duration-200 disabled:bg-gray-50"
-                                disabled={loading}
-                                required
-                            />
+                            <div className="flex justify-center gap-2 mb-6">
+                                {[0, 1, 2, 3].map((index) => (
+                                    <input
+                                        key={index}
+                                        type="text"
+                                        maxLength={1}
+                                        pattern="[0-9]"
+                                        inputMode="numeric"
+                                        autoComplete="one-time-code"
+                                        required
+                                        className="w-12 h-12 text-center border rounded-md shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                                        value={otp[index]}
+                                        onChange={(e) => handleOTPChange(e, index)}
+                                        onKeyDown={(e) => handleOTPKeyDown(e, index)}
+                                        disabled={loading}
+                                        ref={(el) => (otpRefs.current[index] = el)}
+                                    />
+                                ))}
+                            </div>
 
                             {/* Resend OTP Section */}
                             <div className="flex items-center justify-between mt-3 text-sm">
@@ -389,8 +420,13 @@ const Login = () => {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        className="w-full py-3 px-4 bg-gradient-to-r from-gray-900 to-gray-900 hover:from-gray-900 hover:to-black text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-                        disabled={loading || !phone.trim() || (otpSent && !otp.trim()) || ((otpSent && !isVerified && !email.trim()))}
+                        className="w-full py-3 px-4 bg-gradient-to-r from-gray-900 to-gray-900 hover:from-gray-900 hover:to-black text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-100 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                        disabled={
+                            loading ||
+                            !phone.trim() ||
+                            (otpSent && otp.some((digit) => digit === "")) ||
+                            (otpSent && !isVerified && !email.trim())
+                        }
                     >
                         {loading ? (
                             <>
