@@ -383,7 +383,7 @@ const Login = () => {
                                 value={email}
                                 onChange={handleEmailChange}
                                 placeholder="Enter email address"
-                                className="w-full px-4 py-3 text-center text-xl font-mono tracking-[0.5em] border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-900 outline-none transition-all duration-200 disabled:bg-gray-50"
+                                className="w-full px-4 py-3 text-center text-lg font-mono tracking-[0.5em] border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-900 outline-none transition-all duration-200 disabled:bg-gray-50"
                                 disabled={loading}
                                 required
                             />
