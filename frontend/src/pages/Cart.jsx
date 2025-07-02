@@ -9,6 +9,7 @@ const Cart = () => {
   const { products, currency, cartItems, updateQuantity, navigate } = useContext(ShopContext);
 
   const [cartData, setCartData] = useState([]);
+  const [inputValues, setInputValues] = useState({});
 
   const handleCheckout = () => {
     if (localStorage.getItem('token')) {
@@ -22,6 +23,7 @@ const Cart = () => {
     // Only process cart data if both products and cartItems are available
     if (products.length > 0 && Object.keys(cartItems).length >= 0) {
       const tempData = [];
+      const tempInputValues = {};
       for (const items in cartItems) {
         for (const item in cartItems[items]) {
           if (cartItems[items][item] > 0) {
@@ -29,14 +31,17 @@ const Cart = () => {
               _id: items,
               size: item,
               quantity: cartItems[items][item]
-            })
+            });
+            tempInputValues[`${items}_${item}`] = cartItems[items][item].toString();
           }
         }
       }
       setCartData(tempData);
+      setInputValues(tempInputValues);
     } else if (Object.keys(cartItems).length === 0) {
-      // If cartItems is explicitly empty, clear cartData
+      // If cartItems is explicitly empty, clear cartData and inputValues
       setCartData([]);
+      setInputValues({});
     }
     // Don't update cartData if products aren't loaded yet but cartItems exist
   }, [cartItems, products])
@@ -75,16 +80,23 @@ const Cart = () => {
                   <input 
                     onChange={(e) => {
                       const value = e.target.value;
+                      setInputValues(prev => ({
+                        ...prev,
+                        [`${item._id}_${item.size}`]: value
+                      }));
+                    }}
+                    onBlur={(e) => {
+                      const value = e.target.value;
                       if (value === '' || value === '0') {
                         updateQuantity(item._id, item.size, 0);
                       } else {
                         updateQuantity(item._id, item.size, Number(value));
                       }
-                    }} 
+                    }}
                     className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1' 
                     type="number" 
                     min={1} 
-                    value={item.quantity}
+                    value={inputValues[`${item._id}_${item.size}`] || ''}
                   />
                   <img onClick={() => updateQuantity(item._id, item.size, 0)} className='w-4 mr-4 sm:w-5 cursor-pointer' src={assets.bin_icon} alt="" />
                 </div>
