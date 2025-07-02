@@ -8,16 +8,13 @@ import {useNavigate} from "react-router-dom";
 const Login = () => {
     const navigate = useNavigate();
     const [phone, setPhone] = useState("")
-    // Change otp state to array of 4 strings
-    const [otp, setOTP] = useState(["", "", "", ""])
-    const [email, setEmail] = useState("")
+    const [otp, setOTP] = useState("")
     const [otpSent, setOtpSent] = useState(false)
     const [loading, setLoading] = useState(false)
     const [resendLoading, setResendLoading] = useState(false)
     const [error, setError] = useState("")
     const [resendTimer, setResendTimer] = useState(0)
     const [success, setSuccess] = useState("")
-    const [isVerified, setIsVerified] = useState(false)
 
     const timerRef = useRef(null)
     const errorToastId = useRef(null)
@@ -28,12 +25,6 @@ const Login = () => {
         return phoneRegex.test(phoneNumber.trim())
     }
 
-    const validateEmail = (email) => {
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-        return emailRegex.test(email.trim())
-    }
-
-    // Adjust validateOTP to check joined string
     const validateOTP = (otpValue) => {
         return /^\d{4}$/.test(otpValue)
     }
@@ -212,52 +203,17 @@ const Login = () => {
         clearMessages()
     }
 
-    // Create refs for the 4 OTP inputs
-    const otpRefs = useRef([])
-
-    // Handle OTP input change for each input
-    const handleOTPChangeSingle = (e, index) => {
-        const value = e.target.value.replace(/\D/g, "").slice(0, 1)
-        if (!value && otp[index] === "") {
-            // No change
-            return
-        }
-        const newOTP = [...otp]
-        newOTP[index] = value
-        setOTP(newOTP)
-        clearMessages()
-
-        if (value && index < 3) {
-            // Move focus to next input
-            otpRefs.current[index + 1].focus()
-        }
-    }
-
-    // Handle key down for backspace to move focus back
-    const handleOTPKeyDown = (e, index) => {
-        if (e.key === "Backspace" && otp[index] === "" && index > 0) {
-            otpRefs.current[index - 1].focus()
-        }
-    }
-
     // Handle phone input change
     const handlePhoneChange = (e) => {
         setPhone(e.target.value)
         clearMessages()
     }
 
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value)
-        clearMessages()
-    }
-
     // Reset form
     const resetForm = () => {
         setPhone("")
-        setOTP(["", "", "", ""])
-        setEmail("")
+        setOTP("")
         setOtpSent(false)
-        setIsVerified(false)
         setError("")
         setSuccess("")
         setResendTimer(0)
@@ -317,67 +273,14 @@ const Login = () => {
                             <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
                                 4-Digit OTP
                             </label>
-                            <div className="flex justify-center gap-2 mb-6">
-                                {[0, 1, 2, 3].map((index) => (
-                                    <input
-                                        key={index}
-                                        type="text"
-                                        maxLength={1}
-                                        pattern="[0-9]"
-                                        inputMode="numeric"
-                                        autoComplete="one-time-code"
-                                        required
-                                        className="w-12 h-12 text-center border rounded-md shadow-sm focus:border-gray-800 focus:ring-gray-900"
-                                        value={otp[index]}
-                                        onChange={(e) => handleOTPChangeSingle(e, index)}
-                                        onKeyDown={(e) => handleOTPKeyDown(e, index)}
-                                        disabled={loading}
-                                        ref={(el) => (otpRefs.current[index] = el)}
-                                    />
-                                ))}
-                            </div>
-
-                            {/* Resend OTP Section */}
-                            <div className="flex items-center justify-between mt-3 text-sm">
-                                <span className="text-gray-800">Didn&#39;t receive OTP?</span>
-                                {resendTimer > 0 ? (
-                                    <span className="text-gray-800 font-medium">Resend in {resendTimer}s</span>
-                                ) : (
-                                    <button
-                                        type="button"
-                                        onClick={resendOTP}
-                                        disabled={resendLoading}
-                                        className="text-gray-800 hover:text-gray-900 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-colors duration-200"
-                                    >
-                                        {resendLoading ? (
-                                            <>
-                                                <Loader2 className="w-3 h-3 animate-spin" />
-                                                Sending...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <RotateCcw className="w-3 h-3" />
-                                                Resend OTP
-                                            </>
-                                        )}
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                    {otpSent && !isVerified && (
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                                Email Address
-                            </label>
                             <input
-                                id="email"
+                                id="otp"
                                 type="text"
-                                value={email}
-                                onChange={handleEmailChange}
-                                placeholder="Enter email address"
-                                className="w-full px-4 py-2 text-md font-sans border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-900 outline-none transition-all duration-200 disabled:bg-gray-50"
+                                value={otp}
+                                onChange={handleOTPChange}
+                                placeholder="Enter 4-digit OTP"
+                                maxLength={4}
+                                className="w-full px-4 py-3 text-center text-xl font-mono tracking-[0.5em] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 disabled:bg-gray-50"
                                 disabled={loading}
                                 required
                             />
@@ -415,12 +318,7 @@ const Login = () => {
                     <button
                         type="submit"
                         className="w-full py-3 px-4 bg-gradient-to-r from-gray-800 to-gray-800 hover:from-gray-900 hover:to-gray-900 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-                        disabled={
-                            loading ||
-                            !phone.trim() ||
-                            (otpSent && otp.some((digit) => digit === "")) ||
-                            (otpSent && !isVerified && !email.trim())
-                        }
+                        disabled={loading || !phone.trim() || (otpSent && !otp.trim())}
                     >
                         {loading ? (
                             <>
