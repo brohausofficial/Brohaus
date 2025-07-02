@@ -80,6 +80,10 @@ const Cart = () => {
                   <input 
                     onChange={(e) => {
                       const value = e.target.value;
+                      if (value === '0') {
+                        // Prevent entering 0
+                        return;
+                      }
                       setInputValues(prev => ({
                         ...prev,
                         [`${item._id}_${item.size}`]: value
