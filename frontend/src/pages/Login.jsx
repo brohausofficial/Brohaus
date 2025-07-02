@@ -258,41 +258,27 @@ const Login = () => {
     }, [])
 
     return (
-        <div className="min-h-screen flex items-center justify-center w-full bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+        <div className="min-h-screen flex items-center justify-center w-full bg-gradient-to-br from-white-50 to-gray-100 p-4">
             <div className="bg-white shadow-2xl rounded-2xl px-8 py-8 max-w-md w-full border border-gray-100">
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <div className="mx-auto w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
-                        <Shield className="w-8 h-8 text-white" />
+                    <div className="mx-auto w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 shadow-lg border border-gray-200">
+                        <Shield className="w-8 h-8 text-black" />
                     </div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-900 bg-clip-text text-transparent mb-2">
                         Register or Sign In to explore!
                     </h1>
-                    <p className="text-gray-600 text-sm">
+                    <p className="text-gray-800 text-sm">
                         {!otpSent ? "Enter your phone number to receive OTP" : "Enter the 4-digit OTP sent to your phone"}
                     </p>
                 </div>
 
-                {/* Error Alert */}
-                {error && (
-                    <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-                        <AlertCircle className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" />
-                        <p className="text-red-800 text-sm">{error}</p>
-                    </div>
-                )}
-
-                {/* Success Alert */}
-                {success && (
-                    <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-start gap-2">
-                        <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <p className="text-green-800 text-sm">{success}</p>
-                    </div>
-                )}
+               
 
                 <form onSubmit={onSubmitHandler} className="space-y-6">
                     {/* Phone Number Input */}
                     <div>
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                        <label htmlFor="phone" className="block text-sm font-medium text-gray-800 mb-2 flex items-center gap-2">
                             <Phone className="w-4 h-4" />
                             Phone Number
                         </label>
@@ -303,7 +289,7 @@ const Login = () => {
                             onChange={handlePhoneChange}
                             placeholder="Enter your phone number"
                             disabled={otpSent || loading}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-800 outline-none transition-all duration-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
                             required
                         />
                     </div>
@@ -311,7 +297,7 @@ const Login = () => {
                     {/* OTP Input */}
                     {otpSent && (
                         <div>
-                            <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="otp" className="block text-sm font-medium text-gray-800 mb-2">
                                 4-Digit OTP
                             </label>
                             <input
@@ -321,22 +307,22 @@ const Login = () => {
                                 onChange={handleOTPChange}
                                 placeholder="Enter 4-digit OTP"
                                 maxLength={4}
-                                className="w-full px-4 py-3 text-center text-xl font-mono tracking-[0.5em] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 disabled:bg-gray-50"
+                                className="w-full px-4 py-3 text-center text-xl font-mono tracking-[0.5em] border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-900 outline-none transition-all duration-200 disabled:bg-gray-50"
                                 disabled={loading}
                                 required
                             />
 
                             {/* Resend OTP Section */}
                             <div className="flex items-center justify-between mt-3 text-sm">
-                                <span className="text-gray-600">Didn&#39;t receive OTP?</span>
+                                <span className="text-gray-800">Didn&#39;t receive OTP?</span>
                                 {resendTimer > 0 ? (
-                                    <span className="text-blue-600 font-medium">Resend in {resendTimer}s</span>
+                                    <span className="text-gray-900 font-medium">Resend in {resendTimer}s</span>
                                 ) : (
                                     <button
                                         type="button"
                                         onClick={resendOTP}
                                         disabled={resendLoading}
-                                        className="text-blue-600 hover:text-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-colors duration-200"
+                                        className="text-gray-800 hover:text-gray-900 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-colors duration-200"
                                     >
                                         {resendLoading ? (
                                             <>
@@ -357,7 +343,7 @@ const Login = () => {
 
                     {otpSent && !isVerified && (
                         <div>
-                            <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="otp" className="block text-sm font-medium text-gray-800 mb-2">
                                 Email Address
                             </label>
                             <input
@@ -366,22 +352,22 @@ const Login = () => {
                                 value={email}
                                 onChange={handleEmailChange}
                                 placeholder="Enter email address"
-                                className="w-full px-4 py-3 text-center text-xl font-mono tracking-[0.5em] border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200 disabled:bg-gray-50"
+                                className="w-full px-4 py-3 text-center text-xl font-mono tracking-[0.5em] border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-800 focus:border-gray-900 outline-none transition-all duration-200 disabled:bg-gray-50"
                                 disabled={loading}
                                 required
                             />
 
                             {/* Resend OTP Section */}
                             <div className="flex items-center justify-between mt-3 text-sm">
-                                <span className="text-gray-600">Didn&#39;t receive OTP?</span>
+                                <span className="text-gray-800">Didn&#39;t receive OTP?</span>
                                 {resendTimer > 0 ? (
-                                    <span className="text-blue-600 font-medium">Resend in {resendTimer}s</span>
+                                    <span className="text-gray-800 font-medium">Resend in {resendTimer}s</span>
                                 ) : (
                                     <button
                                         type="button"
                                         onClick={resendOTP}
                                         disabled={resendLoading}
-                                        className="text-blue-600 hover:text-blue-700 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-colors duration-200"
+                                        className="text-gray-800 hover:text-gray-900 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-colors duration-200"
                                     >
                                         {resendLoading ? (
                                             <>
@@ -403,7 +389,7 @@ const Login = () => {
                     {/* Submit Button */}
                     <button
                         type="submit"
-                        className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+                        className="w-full py-3 px-4 bg-gradient-to-r from-gray-900 to-gray-900 hover:from-gray-900 hover:to-black text-white font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
                         disabled={loading || !phone.trim() || (otpSent && !otp.trim()) || ((otpSent && !isVerified && !email.trim()))}
                     >
                         {loading ? (
@@ -423,7 +409,7 @@ const Login = () => {
                         <button
                             type="button"
                             onClick={resetForm}
-                            className="w-full py-3 px-4 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full py-3 px-4 border border-gray-300 text-gray-800 font-medium rounded-lg hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={loading}
                         >
                             Change Phone Number
