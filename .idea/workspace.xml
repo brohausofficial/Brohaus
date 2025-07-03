@@ -4,26 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5534709-47db-4906-b428-000bd907fa7e" name="Changes" comment="Update .gitignore to track package-lock.json and ignore .env files.">
-      <change afterPath="$PROJECT_DIR$/admin/helper/logoutHelper.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/admin/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/components/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/components/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/pages/Add.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/Add.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/pages/List.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/List.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/src/pages/Orders.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/admin/src/pages/Orders.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Footer.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Footer.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Navbar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Navbar.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/context/ShopContext.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/context/ShopContext.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Cart.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Cart.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Login.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Orders.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Orders.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/PlaceOrder.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/PlaceOrder.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/PrivacyPolicy.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/PrivacyPolicy.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/ReturnPolicy.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/ReturnPolicy.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/TermsAndConditions.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/TermsAndConditions.jsx" afterDir="false" />
+    <list default="true" id="c5534709-47db-4906-b428-000bd907fa7e" name="Changes" comment="Add axios service for public/private API requests and configure interceptors; integrate enhanced cart functionality with robust state management and error handling.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,27 +63,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Node.js.Login.jsx.executor": "Run",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "jayfirke",
-    "ignore_missing_gitignore": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/Users/jayfirke/Documents/WebStorm Projects/Brohaus/frontend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.dev admin.executor": "Run",
-    "npm.dev user.executor": "Run",
-    "npm.dev.executor": "Run",
-    "settings.editor.selected.configurable": "configurable.tailwindcss",
-    "ts.external.directory.path": "/Users/jayfirke/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Node.js.Login.jsx.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;jayfirke&quot;,
+    &quot;ignore_missing_gitignore&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jayfirke/Documents/WebStorm Projects/Brohaus/frontend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.dev admin.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev user.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.tailwindcss&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/jayfirke/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -119,14 +101,9 @@
   </component>
   <component name="RunManager" selected="npm.dev user">
     <list>
-      <item itemvalue="npm.dev admin" />
       <item itemvalue="npm.dev user" />
+      <item itemvalue="npm.dev admin" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="npm.dev user" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -143,7 +120,8 @@
       <option name="presentableId" value="Default" />
       <updated>1751274931071</updated>
       <workItem from="1751274932275" duration="2171000" />
-      <workItem from="1751277118580" duration="15706000" />
+      <workItem from="1751277118580" duration="25264000" />
+      <workItem from="1751459923018" duration="36000" />
     </task>
     <task id="LOCAL-00001" summary="Update .gitignore to track package-lock.json and ignore .env files.">
       <option name="closed" value="true" />
@@ -153,7 +131,15 @@
       <option name="project" value="LOCAL" />
       <updated>1751275300781</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add axios service for public/private API requests and configure interceptors; integrate enhanced cart functionality with robust state management and error handling.">
+      <option name="closed" value="true" />
+      <created>1751299427236</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1751299427236</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,6 +147,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Update .gitignore to track package-lock.json and ignore .env files." />
-    <option name="LAST_COMMIT_MESSAGE" value="Update .gitignore to track package-lock.json and ignore .env files." />
+    <MESSAGE value="Add axios service for public/private API requests and configure interceptors; integrate enhanced cart functionality with robust state management and error handling." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add axios service for public/private API requests and configure interceptors; integrate enhanced cart functionality with robust state management and error handling." />
   </component>
 </project>
