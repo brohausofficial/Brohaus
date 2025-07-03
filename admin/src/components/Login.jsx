@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react"
 import { toast } from "react-toastify"
-import { Loader2, Phone, Shield, RotateCcw, AlertCircle, CheckCircle } from "lucide-react"
+import { Loader2, Phone, Shield, AlertCircle, CheckCircle } from "lucide-react"
 import {backendUrl} from "../App.jsx";
 import {publicAxios} from "../../service/axios.service.js";
 import {useNavigate} from "react-router-dom";
@@ -11,9 +11,7 @@ const Login = () => {
     const [otp, setOTP] = useState("")
     const [otpSent, setOtpSent] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [resendLoading, setResendLoading] = useState(false)
     const [error, setError] = useState("")
-    const [resendTimer, setResendTimer] = useState(0)
     const [success, setSuccess] = useState("")
 
     const timerRef = useRef(null)
@@ -39,33 +37,10 @@ const Login = () => {
         }
     }
 
-    // Start resend timer
-    const startResendTimer = () => {
-        setResendTimer(60)
-        timerRef.current = setInterval(() => {
-            setResendTimer((prev) => {
-                if (prev <= 1) {
-                    if (timerRef.current) {
-                        clearInterval(timerRef.current)
-                    }
-                    return 0
-                }
-                return prev - 1
-            })
-        }, 1000)
-    }
-
     // Send OTP API call
     const sendOTPAPI = async (phoneNumber) => {
         console.log("Printing phone number", phoneNumber)
-        const response = await publicAxios.post(`${backendUrl}/api/user/sendOTP`, {
-            phone: phoneNumber,
-        })
-        return response.data
-    }
-
-    const resendOTPAPI = async (phoneNumber) => {
-        const response = await publicAxios.post(`${backendUrl}/api/user/resendOTP`, {
+        const response = await publicAxios.post(`${backendUrl}/api/user/sendOTPAdmin`, {
             phone: phoneNumber,
         })
         return response.data
@@ -98,7 +73,6 @@ const Login = () => {
                 setOtpSent(true)
                 setSuccess("OTP sent successfully to your phone")
                 toast.success("OTP sent successfully!", { autoClose: 3000 })
-                startResendTimer()
             } else {
                 setError(response.message || "Failed to send OTP")
                 if (!errorToastId.current) {
@@ -114,36 +88,6 @@ const Login = () => {
             console.error("Send OTP error:", error)
         } finally {
             setLoading(false)
-        }
-    }
-
-    // Resend OTP function
-    const resendOTP = async () => {
-        clearMessages()
-
-        try {
-            setResendLoading(true)
-            const response = await resendOTPAPI(phone)
-
-            if (response.success) {
-                setSuccess("OTP resent successfully")
-                toast.success("OTP resent successfully!", { autoClose: 3000 })
-                startResendTimer()
-            } else {
-                setError(response.message || "Failed to resend OTP")
-                if (!errorToastId.current) {
-                    errorToastId.current = toast.error(response.message, { autoClose: 3000 })
-                }
-            }
-        } catch (error) {
-            const errorMessage = error.response?.data?.message || error.message || "Network error. Please try again."
-            setError(errorMessage)
-            if (!errorToastId.current) {
-                errorToastId.current = toast.error(errorMessage, { autoClose: 3000 })
-            }
-            console.error("Resend OTP error:", error)
-        } finally {
-            setResendLoading(false)
         }
     }
 
@@ -216,7 +160,6 @@ const Login = () => {
         setOtpSent(false)
         setError("")
         setSuccess("")
-        setResendTimer(0)
         clearMessages()
         if (timerRef.current) {
             clearInterval(timerRef.current)
@@ -284,33 +227,6 @@ const Login = () => {
                                 disabled={loading}
                                 required
                             />
-
-                            {/* Resend OTP Section */}
-                            <div className="flex items-center justify-between mt-3 text-sm">
-                                <span className="text-gray-800">Didn&#39;t receive OTP?</span>
-                                {resendTimer > 0 ? (
-                                    <span className="text-gray-800 font-medium">Resend in {resendTimer}s</span>
-                                ) : (
-                                    <button
-                                        type="button"
-                                        onClick={resendOTP}
-                                        disabled={resendLoading}
-                                        className="text-gray-800 hover:text-gray-900 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 transition-colors duration-200"
-                                    >
-                                        {resendLoading ? (
-                                            <>
-                                                <Loader2 className="w-3 h-3 animate-spin" />
-                                                Sending...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <RotateCcw className="w-3 h-3" />
-                                                Resend OTP
-                                            </>
-                                        )}
-                                    </button>
-                                )}
-                            </div>
                         </div>
                     )}
 
